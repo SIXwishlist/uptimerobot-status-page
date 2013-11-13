@@ -1,9 +1,5 @@
 <?php
 
-// Enable Error Reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 'on');
-
 //// 	Configuration		////
 
 // 		Title of Company
@@ -179,7 +175,15 @@ for ($i=0; $i<$Count; ++$i) {
 				<div class="col span_1_of_8"><p><a href="//www.example.corp/legal/copyright/">Copyright</a></p></div>
 			</footer>
 		</div>
-		<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-		<script src="jquery.equalize.min.js"></script>
+		<!--[if lt IE 9]>
+			<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+			<script type="text/javascript">window.jQuery || document.write('<script src="http://labs.eustasy.org/js/jquery-1.10.2.min.js"><\/script>');</script>
+		<![endif]-->
+		<!--[if IE 9]><!-->
+			<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+			<script>window.jQuery || document.write('<script src="http://labs.eustasy.org/js/jquery-2.0.3.min.js"><\/script>');</script>
+		<!--<![endif]-->
+		<script src="http://labs.eustasy.org/js/modernizr.min.js"></script>
+		<script src="http://labs.eustasy.org/js/jquery.equalize.min.js"></script>
 	</body>
 </html>
