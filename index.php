@@ -7,7 +7,7 @@ $Title = 'Example Corp';
 
 // 		Your API Key
 $API_Key = 'u1234-a1b2c34d56efgh789i012j34';
-// Found at http://uptimerobot.com/mySettings.asp
+// Found at http://uptimerobot.com/dashboard#mySettings
 
 // Monitor IDs
 $IDs = array(
@@ -33,6 +33,7 @@ $Apologies = array(
 	'Our API is down. Only third-party apps are effected. Who cares?'
 );
 
+
 // Number of days to get uptime percentage for
 $CustomTime = false;
 // Set to false to disable
@@ -52,7 +53,6 @@ $CustomTime = false;
 		<meta name="keywords" content="<?php echo $Title; ?> Network Status">
 		<meta name="description" content="<?php echo $Title; ?> Network Status">
 		<title>Network Status &nbsp;&middot;&nbsp; <?php echo $Title; ?></title>
-		<link rel="alternate" type="application/rss+xml" title="" href="" /><!-- TODO: RSS -->
 		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic">
 		<link rel="stylesheet" href="style.css">
 	</head>
@@ -72,7 +72,7 @@ $CustomTime = false;
 function fetch($ID, $Description, $Problem, $Key, $Count, $CustomTime) {
 
     // Compute Variables
-	$API_URL = 'http://api.uptimerobot.com/getMonitors?logs=1&format=xml&apiKey=' . $Key . '&monitors=' . $ID;
+	$API_URL = 'http://api.uptimerobot.com/getMonitors?logs=1&format=xml&apiKey=' . $Key . '&monitors=' . $ID . '&responseTimes=1&responseTimesAverage=1440';
 
 	if ($CustomTime) $API_URL .= '&customUptimeRatio=' . $CustomTime;
 
@@ -129,6 +129,14 @@ function fetch($ID, $Description, $Problem, $Key, $Count, $CustomTime) {
 				$Direction = 'down';
 			} echo '<h4 class="box ', $Direction, '">', $Monitor['alltimeuptimeratio'], '% Uptime</h4>';
 		}
+		echo '<div class="breaker"></div>';
+		echo '<h5>Response Time</h5>';
+		foreach($ParsedXML->monitor->responsetime as $Responsetime) {
+			$dt = new DateTime($Responsetime['datetime']);
+
+
+		}
+		echo '<h6 class="box ', 'up', ' faded">', $Responsetime['value'], ' ms', ' &nbsp;&middot;&nbsp; ', $dt->format('Y-m-d'), '</h6>'; 
 		echo '<div class="breaker"></div>';
 		echo '<h5>Events</h5>';
 		foreach($ParsedXML->monitor->log as $Log) {
