@@ -1,47 +1,4 @@
-<?php
-
-//// 	Configuration		////
-
-// 		Title of Company
-$Title = 'Example Corp';
-
-// 		Your API Key
-$API_Key = 'u1234-a1b2c34d56efgh789i012j34';
-// Found at http://uptimerobot.com/dashboard#mySettings
-
-// Monitor IDs
-$IDs = array(
-	'012345678',
-	'123456789',
-	'987654321',
-	'876543210'
-); // Found at http://api.uptimerobot.com/getMonitors?format=xml&apiKey=YOURAPIKEYHERE
-
-// Descriptions of Monitors (in same order)
-$Descriptions = array(
-	'Main Website and Signups',
-	'Control Panel and Forum for Members',
-	'Area 51',
-	'API System'
-);
-
-// Apologies to be printed if down
-$Apologies = array(
-	'Our website is down, you will not be able to sign up. Sorry!',
-	'Trained bees have been dispatched to fix our over-heating servers.',
-	'The aliens appear to have escaped. You shall be vaporised in vengeance shortly.',
-	'Our API is down. Only third-party apps are effected. Who cares?'
-);
-
-
-// Number of days to get uptime percentage for
-$CustomTime = false;
-// Set to false to disable
-
-////		END of Configuration		////
-
-// Header
-?><!DocType html>
+<?php require 'config.php'; ?><!DocType html>
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -55,6 +12,23 @@ $CustomTime = false;
 		<title>Network Status &nbsp;&middot;&nbsp; <?php echo $Title; ?></title>
 		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic">
 		<link rel="stylesheet" href="style.css">
+		<script>var jQl={q:[],dq:[],gs:[],ready:function(a){'function'==typeof a&&jQl.q.push(a);return jQl},getScript:function(a,c){jQl.gs.push([a,c])},unq:function(){for(var a=0;a<jQl.q.length;a++)jQl.q[a]();jQl.q=[]},ungs:function(){for(var a=0;a<jQl.gs.length;a++)jQuery.getScript(jQl.gs[a][0],jQl.gs[a][1]);jQl.gs=[]},bId:null,boot:function(a){'undefined'==typeof window.jQuery.fn?jQl.bId||(jQl.bId=setInterval(function(){jQl.boot(a)},25)):(jQl.bId&&clearInterval(jQl.bId),jQl.bId=0,jQl.unqjQdep(),jQl.ungs(),jQuery(jQl.unq()), 'function'==typeof a&&a())},booted:function(){return 0===jQl.bId},loadjQ:function(a,c){setTimeout(function(){var b=document.createElement('script');b.src=a;document.getElementsByTagName('head')[0].appendChild(b)},1);jQl.boot(c)},loadjQdep:function(a){jQl.loadxhr(a,jQl.qdep)},qdep:function(a){a&&('undefined'!==typeof window.jQuery.fn&&!jQl.dq.length?jQl.rs(a):jQl.dq.push(a))},unqjQdep:function(){if('undefined'==typeof window.jQuery.fn)setTimeout(jQl.unqjQdep,50);else{for(var a=0;a<jQl.dq.length;a++)jQl.rs(jQl.dq[a]); jQl.dq=[]}},rs:function(a){var c=document.createElement('script');document.getElementsByTagName('head')[0].appendChild(c);c.text=a},loadxhr:function(a,c){var b;b=jQl.getxo();b.onreadystatechange=function(){4!=b.readyState||200!=b.status||c(b.responseText,a)};try{b.open('GET',a,!0),b.send('')}catch(d){}},getxo:function(){var a=!1;try{a=new XMLHttpRequest}catch(c){for(var b=['MSXML2.XMLHTTP.5.0','MSXML2.XMLHTTP.4.0','MSXML2.XMLHTTP.3.0','MSXML2.XMLHTTP','Microsoft.XMLHTTP'],d=0;d<b.length;++d){try{a= new ActiveXObject(b[d])}catch(e){continue}break}}finally{return a}}};if('undefined'==typeof window.jQuery){var $=jQl.ready,jQuery=$;$.getScript=jQl.getScript};</script>
+		<!--[if lt IE 9]>
+			<script>jQl.loadjQ('//cdn.jsdelivr.net/g/modernizr,selectivizr,prefixfree,jquery@1.11.0,jquery.equalize,jquery.downboy');</script>
+		<![endif]-->
+		<!--[if IE 9]><!-->
+			<script>jQl.loadjQ('//cdn.jsdelivr.net/g/modernizr,prefixfree,jquery,jquery.equalize,jquery.downboy');</script>
+		<!--<![endif]-->
+		<script>
+			$(function(){
+				equalize();
+				downBoy();
+				window.onresize = function() {
+					equalize();
+					downBoy();
+				}
+			})
+		</script>
 	</head>
 	<body>
 		<div id="skiptomain"><a href="#maincontent">skip to main content</a></div>
@@ -87,8 +61,8 @@ function fetch($ID, $Description, $Problem, $Key, $Count, $CustomTime) {
 
 	// Loop Monitors
 	foreach($ParsedXML->monitor as $Monitor) {
-		echo '<div class="col span_1_of_', $Count, '">';
-		echo '<h2>', $Monitor['friendlyname'], '</h2>';
+		echo '<div class="col span_1_of_'.$Count.'">';
+		echo '<h2>'.$Monitor['friendlyname'].'</h2>';
 		if ($Monitor['status'] == 2) {
 			$Direction = 'up';
 			$Status = 'Online';
@@ -108,10 +82,13 @@ function fetch($ID, $Description, $Problem, $Key, $Count, $CustomTime) {
 			$Direction = 'down';
 			$Status = 'AWOL';
 		}
-		echo '<p class="equalize box">', $Description;
-		if ($Status != 'Online') echo '<br><span class="red">', $Problem, '</span>';
+		echo '<p class="equalize box">'.$Description;
+		if ($Status != 'Online') {
+			if (!empty($Description) && $Status != 'Online') echo '<br>';
+			echo '<span class="red">'.$Problem.'</span>';
+		}
 		echo '</p>';
-		echo '<h3 class="box ', $Direction, '">', $Status, '</h3>';
+		echo '<h3 class="box '.$Direction.'">'.$Status.'</h3>';
 		if ($CustomTime) {
 			if ($Monitor['customuptimeratio'] >= 99) {
 				$Direction = 'up';
@@ -119,7 +96,7 @@ function fetch($ID, $Description, $Problem, $Key, $Count, $CustomTime) {
 				$Direction = 'level';
 			} else {
 				$Direction = 'down';
-			} echo '<h4 class="box ', $Direction, '">', $Monitor['customuptimeratio'], '% Uptime</h4>';
+			} echo '<h4 class="box '.$Direction.'">'.$Monitor['customuptimeratio'].'% Uptime</h4>';
 		} else {
 			if ($Monitor['alltimeuptimeratio'] >= 99) {
 				$Direction = 'up';
@@ -127,17 +104,17 @@ function fetch($ID, $Description, $Problem, $Key, $Count, $CustomTime) {
 				$Direction = 'level';
 			} else {
 				$Direction = 'down';
-			} echo '<h4 class="box ', $Direction, '">', $Monitor['alltimeuptimeratio'], '% Uptime</h4>';
+			} echo '<h4 class="box '.$Direction.'">'.$Monitor['alltimeuptimeratio'].'% Uptime</h4>';
 		}
 		echo '<div class="breaker"></div>';
-		echo '<h5>Response Time</h5>';
-		foreach($ParsedXML->monitor->responsetime as $Responsetime) {
-			$dt = new DateTime($Responsetime['datetime']);
-
-
+		foreach($Monitor->responsetime as $Responsetime) {
+			echo '<h5>Response Time</h5>';
+			echo '<h6 class="box';
+			if ($Responsetime['value'] > 300) echo ' down';
+			else echo ' up';
+			echo ' faded">'.$Responsetime['value'].' ms'.' &nbsp;&middot;&nbsp; '.$Responsetime['datetime'].'</h6>';
+			echo '<div class="breaker"></div>';
 		}
-		echo '<h6 class="box ', 'up', ' faded">', $Responsetime['value'], ' ms', ' &nbsp;&middot;&nbsp; ', $dt->format('Y-m-d'), '</h6>'; 
-		echo '<div class="breaker"></div>';
 		echo '<h5>Events</h5>';
 		foreach($ParsedXML->monitor->log as $Log) {
 			if ($Log['type'] == 2) {
@@ -156,7 +133,7 @@ function fetch($ID, $Description, $Problem, $Key, $Count, $CustomTime) {
 				$Direction = 'down';
 				$Status = 'AWOL';
 			}
-			echo '<h6 class="box ', $Direction, ' faded">', $Status, ' &nbsp;&middot;&nbsp; ', $Log['datetime'], '</h6>';
+			echo '<h6 class="box '.$Direction.' faded">'.$Status.' &nbsp;&middot;&nbsp; '.$Log['datetime'].'</h6>';
 		}
 		echo '</div>';
 	}
@@ -176,22 +153,12 @@ for ($i=0; $i<$Count; ++$i) {
 		<div id="footercontainer">
 			<footer class="section group">
 				<div class="col span_5_of_8">
-					<p class="left">Copyright &copy; <?php echo date('Y'), ' ', $Title; ?></p>
+					<p class="left">Copyright &copy; <?php echo date('Y').' '.$Title; ?></p>
 				</div>
 				<div class="col span_1_of_8"><p><a href="//status.example.corp/">Status</a></div>
 				<div class="col span_1_of_8"><p><a href="//forum.example.corp/">Disclaimer</a></div>
 				<div class="col span_1_of_8"><p><a href="//www.example.corp/legal/copyright/">Copyright</a></p></div>
 			</footer>
 		</div>
-		<!--[if lt IE 9]>
-			<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-			<script type="text/javascript">window.jQuery || document.write('<script src="http://labs.eustasy.org/js/jquery-1.10.2.min.js"><\/script>');</script>
-		<![endif]-->
-		<!--[if IE 9]><!-->
-			<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-			<script>window.jQuery || document.write('<script src="http://labs.eustasy.org/js/jquery-2.0.3.min.js"><\/script>');</script>
-		<!--<![endif]-->
-		<script src="http://labs.eustasy.org/js/modernizr.min.js"></script>
-		<script src="http://labs.eustasy.org/js/jquery.equalize.min.js"></script>
 	</body>
 </html>
