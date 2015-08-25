@@ -41,7 +41,7 @@
 		<div id="maincontentcontainer">
 			<div id="maincontent">
 				<div class="section group">
-<?
+<?php
 
 function fetch($ID, $Description, $Problem, $Key, $Count, $CustomTime) {
 
