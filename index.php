@@ -17,7 +17,6 @@ require __DIR__.'/header.php';
 $Data = uptimerobot_fetch_monitors(
 	$Monitors,
 	$API_Key,
-	$Data['total'],
 	$CustomTime
 );
 //var_dump($Data);
@@ -25,12 +24,13 @@ $Data = uptimerobot_fetch_monitors(
 // Echo the Monitors
 foreach($Data['monitors']['monitor'] as $Monitor) {
 
-	if ( $Monitor['status'] > 2 ) {
-		if ( empty($Apologies[$Monitor['id']]) ) {
-			$Apologies['Current'] = false;
-		} else {
-			$Apologies['Current'] = '<p class="color-pomegranate">'.$Apologies[$Monitor['id']].'</p>';
-		}
+	if (
+		$Monitor['status'] > 2 &&
+		!empty($Apologies[$Monitor['id']])
+	) {
+		$Apologies['Current'] = '<p class="color-pomegranate">'.$Apologies[$Monitor['id']].'</p>';
+	} else {
+		$Apologies['Current'] = false;
 	}
 
 	$Status = uptimerobot_nice_status($Monitor['status']);

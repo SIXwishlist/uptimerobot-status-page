@@ -1,6 +1,6 @@
 <?php
 
-function uptimerobot_fetch_monitors($Monitors, $Key, $Count, $CustomTime) {
+function uptimerobot_fetch_monitors($Monitors, $Key, $CustomTime) {
 
 	// Compute Variables
 	$API_URL = 'http://api.uptimerobot.com/getMonitors?apiKey='.$Key.'&monitors=';
